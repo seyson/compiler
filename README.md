@@ -1,25 +1,29 @@
 # List of C constructs processed by the compiler
 
 ```
-[✔] Expressions
+[✔] Arithmetic expressions
+
 [✔] Operators
+
 [✔] Procedures
+
 [✔] Arrays
+
 [✔] Statements
-- [✔] declarations
-- [✔] assignments
-- [✔] case
-- [ ] goto 
-- [✔] if
-- [✔] while
-- [✔] do...while
-- [ ] for
-- [✔] print
+  [✔] declarations
+  [✔] assignments
+  [✔] case
+  [ ] goto 
+  [✔] if
+  [✔] while
+  [✔] do...while
+  [ ] for
+  [✔] print
 ```
 
 Differences from actual C (not totally complete list):
-+ Not all operators are implemented (e.g., there are no bitwise operators). Expressions can be identifiers, literals, or combinations of identifiers, literals, parentheses, unary `+`, unary `-`, `*`, `/`, `%`, `+`, `-`, `>`, `<`, `<=`, `>=`, `==`, `!=`, `&&` and `||`. Precedence rules are respected for all these operators. For example, `(1 + 2) * -5` evaluates to `-15`.
-+ Assignments are not considered expressions by this compiler (`x = y = 5` is impossible). Function calls are also not considered expressions.
++ Not all operators are implemented (e.g., there are no bitwise operators). Expressions can be identifiers, literals, or combinations of identifiers, literals, parentheses, unary `+`, unary `-`, `*`, `/`, `%`, `+`, `-`, `>`, `<`, `<=`, `>=`, `==`, `!=`, `&&` and `||`. Precedence rules are respected for all these operators. For example, `(1 + 2) * -5` evaluates to `-15` and `1 < 2 - 3` evaluates to `0`.
++ Assignments are not considered expressions by this compiler (`x = y = 5` is impossible).
 + Function prototypes (function declarations without a definition) are impossible.
 + Functions can have any number of parameters of type `int`, `char` or `float` (but the parameters can't be arrays. Functions cannot return anything and must be declared with `void`.
 + Recursion does not work properly.
