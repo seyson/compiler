@@ -1,4 +1,23 @@
-# Instructions to run
+# List of C constructs processed by the compiler
+
+```
+[✔] Expressions
+[✔] Operators
+[✔] Procedures
+[✔] Arrays
+[✔] Statements
+- [✔] declarations
+- [✔] assignments
+- [✔] case
+- [ ] goto 
+- [✔] if
+- [✔] while
+- [✔] do...while
+- [ ] for
+- [✔] print
+```
+
+# How to run
 1. `cd` to the directory that contains the project
 1. `gcc vm.c stack.c symtab.c tokenizer.c parser.c`
 1. `./a.out <file>` or `./a.out`. If you don't provide an input file, the input file will be `test_input.c` by default. Pre-written test files are given in the `test` folder.
