@@ -17,6 +17,14 @@
 - [✔] print
 ```
 
+Differences from actual C (not totally complete list):
++ Not all operators are implemented (e.g., there are no bitwise operators). Expressions can be identifiers, literals, or combinations of identifiers, literals, parentheses, unary `+`, unary `-`, `*`, `/`, `%`, `+`, `-`, `>`, `<`, `<=`, `>=`, `==`, `!=`, `&&` and `||`. Precedence rules are respected for all these operators. For example, `(1 + 2) * -5` evaluates to `-15`.
++ Assignments are not considered expressions by this compiler (`x = y = 5` is impossible). Function calls are also not considered expressions.
++ Function prototypes (function declarations without a definition) are impossible.
++ Functions can have any number of parameters of type `int`, `char` or `float` (but the parameters can't be arrays. Functions cannot return anything and must be declared with `void`.
++ Recursion does not work properly.
++ There is a `print` statement that looks like this: `print A[i]`.
+
 # How to run
 1. `cd` to the directory that contains the project
 1. `gcc vm.c stack.c symtab.c tokenizer.c parser.c`
