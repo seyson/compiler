@@ -1,7 +1,7 @@
 # List of C constructs processed by the compiler
 
 ```
-[✔] Arithmetic expressions
+[✔] Expressions
 
 [✔] Operators
 
@@ -25,14 +25,15 @@ Differences from actual C (not totally complete list):
 + Not all operators are implemented (e.g., there are no bitwise operators). Expressions can be identifiers, literals, or combinations of identifiers, literals, parentheses, unary `+`, unary `-`, `*`, `/`, `%`, `+`, `-`, `>`, `<`, `<=`, `>=`, `==`, `!=`, `&&` and `||`. Precedence rules are respected for all these operators. For example, `(1 + 2) * -5` evaluates to `-15` and `1 < 2 - 3` evaluates to `0`.
 + Assignments are not considered expressions by this compiler (`x = y = 5` is impossible).
 + Function prototypes (function declarations without a definition) are impossible.
-+ Functions can have any number of parameters of type `int`, `char` or `float` (but the parameters can't be arrays. Functions cannot return anything and must be declared with `void`.
++ Functions can have any number of non-array parameters of type `int`, `char` or `float`.
++ Functions cannot return anything and must be declared with `void`.
 + Recursion does not work properly.
-+ There is a `print` statement that looks like this: `print A[i]`.
++ There is a custom `print` statement (for example, `print A[i]`).
 
 # How to run
 1. `cd` to the directory that contains the project
 1. `gcc vm.c stack.c symtab.c tokenizer.c parser.c`
-1. `./a.out <file>` or `./a.out`. If you don't provide an input file, the input file will be `test_input.c` by default. Pre-written test files are given in the `test` folder.
+1. `./a.out <file>` or `./a.out`. If you don't specify an input file, the input file will be `test_input.c` by default. There are pre-written test files in the `test` folder.
 
 The output of the program will always be the following sequence:
 1. `<tokenizer output>` (the list of program tokens)
