@@ -1,4 +1,4 @@
-# List of C constructs processed by the compiler
+# C constructs
 
 ```
 [✔] Expressions
@@ -55,7 +55,7 @@ void main()
 }
 ```
 
-`./a.out test/if.c` outputs
+`./a.out test/dowhile.c` outputs
 
 ```console
 Token: (Keyword) void
