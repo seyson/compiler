@@ -7,6 +7,8 @@
 
 [✔] Procedures
 
+[✔] Variables
+
 [✔] Arrays
 
 [✔] Statements
