@@ -209,27 +209,34 @@ token next_token(void)
     /* look for a number or period at the beginning of the token */
     if ('.' == ch || '0' <= ch && ch <= '9') {
         curval = 0;
-        float f;
-        float fact = 1.0;
+        float floatval;
+        float factor = 1.0;
+        int digits_in_front = 0; /* we're scanning an number or not? */
         /* process zero or more digits */
-        while ('0' <= ch && ch <= '9') { 
+        while ('0' <= ch && ch <= '9') {
+            digits_in_front = 1;
             curval = (ch - '0') + curval * 10;
             next_char();
         }
         if ('.' == ch) {
-            f = curval;
-            /* determine whether we should return a period token */
+            /* determine whether the period token should be returned,
+            as opposed to a number with a decimal point */
             int dot_line = line;
             int dot_column = column;
             next_char();
-            if (curval == 0 && isalpha(ch)) {
+            if (!digits_in_front && !('0' <= ch && ch <= '9')) {
+                /* we did not see any digits in front of the period,
+                and the current character after the period
+                is not a digit, so just return the period token:
+                0. and .0 and 0.0 are valid numbers but not . */
                 t = (token) {TK_PERIOD, dot_line, dot_column};
-                return t; /* return dot token */
+                return t;
             }
-
+            /* process zero or more digits */
+            floatval = curval;
             while ('0' <= ch && ch <= '9') {
-                fact /= 10.0;
-                f = f + (float) (ch - '0') * fact;
+                factor /= 10.0;
+                floatval = floatval + (float) (ch - '0') * factor;
                 next_char();
             }
             curtype = TK_REAL;
@@ -245,15 +252,15 @@ token next_token(void)
                 t.i = curval;
             }
             else {
-                t.f = f;
+                t.f = floatval;
             }
         }
         else {
-            /* (ch must be alphabetic) */
+            /* (ch is therefore alphabetic) */
             printf("Error: invalid suffix in integer constant at line %d, column %d\n", start_line, start_column);
             exit(EXIT_FAILURE);
         }
-        return t; /* return the number */
+        return t;
     }
     /* read a string */
     if ('"' == ch) {
