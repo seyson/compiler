@@ -54,7 +54,7 @@ void gettoken(void)
     curtoken = toks[0];
 }
 
-/* Compare the current token to an expected token and proceed iff there's a match */
+/* Matching the current token to an expected token, halting if there is no match */
 void match(TokenType t) 
 {
     /* skip EOL */

@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include <string.h>
 /*
-A lexical analyzer for C.
+A lexical analyzer (tokenizer) for a subset of C.
 Lexical analysis, or tokenization, segments the source code text into a sequence of "tokens",
 such as keywords, identifiers and operators.
 

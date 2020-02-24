@@ -337,17 +337,17 @@ token next_token(void)
             next_char();
         }
         t.text[count] = '\0'; /* terminate the text with a null char */
-        int k = find_keyword(t.text); /* check if it's a keyword */
+        int k = find_keyword(t.text);
         if (k != -1) {
+            /* keyword */
             curtype = k;
             t.type = curtype;
         }
         else {
+            /* not keyword */
             curtype = TK_ID;
             t.type = curtype;
         }
-        /* the current char can't be alphanumeric, so it must be a proper termination
-        character (whitespace or punctuation) */
         return t; /* return the identifier/keyword */
     }
     /* read everything else */
