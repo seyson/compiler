@@ -7,33 +7,31 @@
 #include <string.h>
 /*
 A lexical analyzer for C.
+Lexical analysis, or tokenization, segments the source code text into a sequence of "tokens",
+such as keywords, identifiers and operators.
 
-1. Keywords are just keywords.
-2. Identifiers are a letter or an underscore followed by any combination of letters, digits and underscores.
-   (constraints: not keywords, and only up to 31 characters long)
-3. Numbers are digits including an optional period in any position amongst those digits.
-   (exceptions: hexadecimals and exponential numbers, which have an 'x' and an 'E', respectively)
-   (constraints: hexadecimal and octal numbers don't have a fractional part -- if a period occurs in the structure 
+1. Keywords are just keywords: reserved words that are taken as-is in the source code text.
+2. An identifier is a letter or underscore followed by any combination of letters, digits and underscores
+   and is terminated by whitespace or punctuation.
+   (Constraints in C: identifiers cannot be keywords, and are only up to 31 characters long)
+3. A number is a sequence of digits including an optional period in any position amongst those digits
+   and is terminated by whitespace or punctuation.
+   For example, .1, 1, 1. and 1.0 are all valid numbers.
+   (Exceptions in C: hexadecimals and exponential numbers, which have an 'x' and an 'E', respectively)
+   (Constraints in C: hexadecimal and octal numbers don't have a fractional part -- if a period occurs in the structure 
     of a hexadecimal number, it's a mistake, but if a period occurs within an octal number, it gets evaluated as
     if it were a decimal number)
-4. String literals are any characters except " surrounded by "'s.
+4. String literals are any characters, except for quotation marks, that are surrounded by quotation marks.
    (Strings cannot contain a new line character unless the new line character is preceded by '\'.)
 5. Operators are symbols like -, ->, <, <=, ==, and !=.
-6. Punctuators include left and right brackets, comma, and semicolon.
-7. Comments are characters inside // and a new line or inside /* and * /
+6. Punctuators include left and right bracket, comma, and semicolon.
+7. Comments begin with // and end in a new line character
+   or
+   begin with slash-asterisk, /*, and end with asterisk-slash.
 EOL
 EOF is a distinct character that marks the end of the source file.
 
-An identifier begins with a letter or underscore followed by zero or more letters, numbers and underscores
-and is terminated by whitespace or punctuation.
-
-Integers begin with a digit, and the starting characters determine the type:
-0 means octal,
-0x or 0X means hexadecimal,
-1-9 means decimal.
-Numbers are terminated by whitespace or punctuation.
-
-What wasn't included:
+What's not supported as valid tokens:
 - hexadecimal and exponential numbers
 - numerical types other than (signed) int and float
 - restrictions on the size of numbers/strings (however, an error is thrown if identifiers are > 31 chars long)
@@ -43,8 +41,7 @@ What wasn't included:
 - contiguous strings aren't merged into a single string (e.g., "a" "b" doesn't get processed into "ab")
 - pound symbols (#include and #define statements)
 - the operator -> (the dot operator is already included)
-- (there are probably more that I haven't mentioned)
-
+- (there are definitely more that weren't mentioned)
 */
 
 typedef enum {
@@ -73,11 +70,11 @@ typedef struct {
     unsigned int line;
     unsigned int column;
     union {
-        int i;             /* value for integer constants */
+        int i;            /* value for integer constants */
         float f;          /* value for floating-point constants */
-        char text[32];     /* text for identifiers */
-        char c;            /* characters */
-        char* s;           /* strings */
+        char text[32];    /* text for identifiers */
+        char c;           /* characters */
+        char* s;          /* strings */
     };
 } token;
 

@@ -194,7 +194,7 @@ void print_tokens(token* toks)
 token next_token(void)
 {
     token t;
-    /* skip any white space (except for \n which is returned) */
+    /* first, skip any white space (except for \n which is returned) */
     while (isspace(ch)) {
         if ('\n' == ch) {
             curtype = TK_EOL;
@@ -206,19 +206,19 @@ token next_token(void)
     }
     int start_line = line;
     int start_column = column;
-    /* read a number or a dot */
+    /* look for a number or period at the beginning of the token */
     if ('.' == ch || '0' <= ch && ch <= '9') {
         curval = 0;
         float f;
         float fact = 1.0;
-        /* process any numbers in front (before a period) */
+        /* process zero or more digits */
         while ('0' <= ch && ch <= '9') { 
             curval = (ch - '0') + curval * 10;
             next_char();
         }
         if ('.' == ch) {
             f = curval;
-            /* test if we should return a dot token instead of a number */
+            /* determine whether we should return a period token */
             int dot_line = line;
             int dot_column = column;
             next_char();
