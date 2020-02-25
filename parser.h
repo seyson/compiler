@@ -48,17 +48,18 @@ typedef TokenType Type;
 /* get the next token */
 void gettoken(void);
 
-/* compare the current token to a specified token and halt execution if they don't match */
+/* compare the current token to a specified token and halt execution unless they match */
 void match(TokenType);
 
 /* print an error message about the current token, line number and column number; and exit */
 void error(void);
 
-/* Return the type of result of xRy, where the types of x, y are given and R is one of the following relations:
-+, -, *, / (note: these either produce reals or ints)
-%, ||, &&, ==, !=, <, <=, >, >= (note: these always produce ints) 
-
-Also output any instructions for converting the operands on the stack.
+/* Return the type of xRy, where the types of x, y are given and R, also given,
+is one of the following relations:
++ - * / % || && == != < <= > >=
+Note: +, -, * and / produce either reals or ints
+(for example, real + int = real, whereas int + int = int);
+the others always produce ints (e.g., a > b is either 1 or 0).
 */
 Type combine(Type, Type, Type);
 
@@ -70,13 +71,13 @@ void gen_addr_rel(int, unsigned int); /* same as gen_addr, but input a location 
 void gen_int(int); /* write an int to the code array */
 void gen_float(float); /* write a float to the code array */
 
-void G(void);
-Type O(void);
-Type A(void);
-Type Q(void); /* equality expressions (== !=) */
-Type R(void); /* relational expressions (> >= < <=) */
-Type E(void); /* arithmetic expressions */
-Type T(void); // * / %
+void G(void); /* generates any number of procedure or variable declarations, i.e., the "translation unit" */
+Type O(void); /* generates an or expression: || */
+Type A(void); /* generates an and expression: && */
+Type Q(void); /* generates an equality expression: == != */
+Type R(void); /* generates a relational expression: > >= < <= */
+Type E(void); /* generates an addition or subtraction expression: + - */
+Type T(void); /* generates a modulo, multiplication or division expression: % * / */
 /*
 F ::= + F
     | - F
@@ -86,7 +87,6 @@ F ::= + F
     | <identifier> [ <O> ]
 */
 Type F(void);
-void external_decl(void);
 
 /* <declaration> ::= <type-specifier> {<init-declarator>}* ;
 where <type-specifier> ::= void | char | int | float */

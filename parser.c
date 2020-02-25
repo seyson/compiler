@@ -2,12 +2,12 @@
 #include "tokenizer.h"
 #include "symtab.h"
 
-unsigned int ip = 0; /* instruction pointer */
-unsigned int dp = 0; /* data pointer, or number of bytes to allocate to data array */
-token* toks;                 /* list of tokens from tokenizer */
-token curtoken;              /* current token being processed */
-SymbolTableStack symtabs;    /* a stack of symbol tables to work with */
-int inside_switch = 0;       /* indicates whether case and default labels may be used */
+unsigned int ip = 0;       /* instruction pointer */
+unsigned int dp = 0;       /* data pointer = number of bytes to later allocate to data array */
+token* toks;               /* list of tokens from tokenizer */
+token curtoken;            /* current token being processed */
+SymbolTableStack symtabs;  /* a stack of symbol tables to work with */
+int inside_switch = 0;     /* indicates whether case and default labels may be used */
 
 void gen_op(unsigned char op)
 {
@@ -16,6 +16,7 @@ void gen_op(unsigned char op)
 
 void gen_addr(int addr)
 {
+    /* write the given integer to the next 4 bytes of the code array */
     code[ip++] = (addr >> 24) & 0xFF;
     code[ip++] = (addr >> 16) & 0xFF;
     code[ip++] = (addr >> 8)  & 0xFF;
@@ -38,12 +39,12 @@ void gen_int(int i)
 
 void gen_float(float f)
 {
+    /* write the given float to the next 4 bytes of the code array */
     for (int i = 0; i < 4; i++) {
         code[ip++] = *((unsigned char*) &f + i);
     }
 }
 
-/* Get the next token (update curtoken) */
 void gettoken(void)
 {
     toks++;
@@ -51,10 +52,9 @@ void gettoken(void)
     while (toks[0].type == TK_EOL) {
         toks++;
     }
-    curtoken = toks[0];
+    curtoken = toks[0]; /* update curtoken */
 }
 
-/* Matching the current token to an expected token, halting if there is no match */
 void match(TokenType t) 
 {
     /* skip EOL */
@@ -1206,11 +1206,11 @@ void conv(Type t1, Type t2)
 
 void procedure_call(void)
 {
-    /* Before placing the set of instructions corresponding to a proc definition in the code array, place a jump <hole> operation in the code array.
-    Update the initially-unknown <hole> so that the jump skips to the instruction right after the last instruction in the proc.
-    The return keyword generates a return instruction, but append an op_return to the end of the procedure instructions regardless.
-    An op_call shall begin executing the proc instructions by going to the particular ip (check the addr field of the func's entry in the symtab).
-    The input to the op_return is left on the stack beforehand. (op_return removes from the stack and returning to the original ip). */
+    /* Before placing the set of instructions corresponding to a proc definition in the code array, place a jump operation in the code array.
+    Update the initially-unknown argument to the jump instruction so that the jump skips to the instruction right after the last instruction in the proc.
+    The return keyword creates a return instruction, but append an op_return to the end of the procedure instructions regardless.
+    An op_call should begin executing the proc instructions by going to the particular ip value (check the addr field of the func's entry in the symtab).
+    The input to the op_return is left on the stack beforehand. (op_return removes from the stack and returns to the original ip). */
 
     if (curtoken.type == TK_ID) {
         Node* entry = search_symtabs(&symtabs, curtoken.text);
@@ -1260,7 +1260,9 @@ void procedure_call(void)
         c
         retaddr
 
-        Thus, when the function is called, it takes the 3 parameters from stack in the correct order;
+        This means that when the function is called, we take the 3 parameters from stack in the correct order
+        and not in reverse order.
+        
         When it returns, retaddr will be at the top of the stack.
 
         Note that the return address pushed cannot be the ip at the time the push instruction is generated
@@ -1369,14 +1371,15 @@ void parse(void)
     code = malloc(100000);
     FILE* fp = read_file(sourcefile);
     toks = scan(); /* get tokens from tokenizer */
-    print_tokens(toks);
+    print_tokens(toks); /* print the tokens */
     printf("\n");
 
-    /* initialize stack of symbol tables */
+    /* initialize the stack of symbol tables */
     symtabs.top = -1;
     List* tab = create_table();
     push_symtab(tab, &symtabs);
 
+    /* move to the first token */
     while (toks[0].type == TK_EOL) {
         toks++;
     }
